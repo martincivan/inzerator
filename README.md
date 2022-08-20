@@ -1,0 +1,1 @@
+preskumat: https://github.com/zgalaz/property-finding-helpers
