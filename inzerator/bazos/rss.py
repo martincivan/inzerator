@@ -6,7 +6,7 @@ import feedparser
 import logging
 
 from inzerator.bazos.model import SearchParams, FeedItem
-from inzerator.bazos.storage import UserStorage
+from inzerator.bazos.storage import AuthorStorage
 from inzerator.rate_limiter import RateLimiter
 
 
@@ -43,12 +43,12 @@ class Loader:
                              published=record.published_parsed))
 
 
-class UserChecker:
+class AuthorChecker:
 
-    def __init__(self, user_storage: UserStorage, listing_threshold: int, session: RateLimiter):
+    def __init__(self, author_storage: AuthorStorage, listing_threshold: int, session: RateLimiter):
         self.session = session
         self.listing_threshold = listing_threshold
-        self.user_storage = user_storage
+        self.author_storage = author_storage
         self.user_pattern = "\"(https://www.bazos.sk/hodnotenie.php\\?[^\s]*)\""
         self.user_listing_number = "Všetky inzeráty užívateľa \((\d+)\)\:"
 
@@ -60,18 +60,18 @@ class UserChecker:
                 logging.warning("User pattern not matched.",
                                 {"listing_link": feed_item.link, "listing_text": listing_text})
                 return
-            if await self.user_storage.get(result.groups()[0]):
+            if await self.author_storage.get(result.groups()[0]):
                 return False
-            return await self._load_user(self.session, result.groups()[0])
+            return await self._load_author(self.session, result.groups()[0])
 
-    async def _load_user(self, session, user_url: str) -> Optional[bool]:
-        async with await self.session.get(user_url) as html:
+    async def _load_author(self, session, author_url: str) -> Optional[bool]:
+        async with await self.session.get(author_url) as html:
             listing_text = await html.text()
             count = re.search(self.user_listing_number, listing_text)
             if count is None or not len(count.groups()):
                 logging.warning("User listing count pattern not matched.",
-                                {"user_link": user_url, "user_text": listing_text})
+                                {"user_link": author_url, "user_text": listing_text})
                 return
             result = int(count.groups()[0]) <= self.listing_threshold
-            await self.user_storage.add(user_url, result)
+            await self.author_storage.add(author_url, result)
             return result

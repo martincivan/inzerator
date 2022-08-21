@@ -15,7 +15,7 @@ class ListingStorage:
         return True
 
 
-class UserStorage:
+class AuthorStorage:
 
     def __init__(self):
         self.items = {}
