@@ -22,9 +22,9 @@ class Bazos:
         self.listing_storage = listing_storage
         self.user_checker = user_checker
 
-    async def load(self) -> AsyncIterable[FeedItem]:
-        loader = Loader(self.BASE_URL, search_params=SearchParams(), session=self.session)
+    async def load(self, search_params: SearchParams, user_id: int) -> AsyncIterable[FeedItem]:
+        loader = Loader(self.BASE_URL, search_params=search_params, session=self.session)
 
         async for result in loader.__anext__():
-            if await self.listing_storage.add(result) and await self.user_checker.load(result):
+            if await self.listing_storage.add(result, user_id) and await self.user_checker.load(result):
                 yield result

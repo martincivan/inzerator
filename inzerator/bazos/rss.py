@@ -28,7 +28,8 @@ class Loader:
             yield i
 
     async def load(self):
-        async with await self.session.get(self.baseUrl + urllib.parse.urlencode(self.search_params.__dict__)) as html:
+        search_params = {k:v for k,v in self.search_params.__dict__.items() if v is not None}
+        async with await self.session.get(self.baseUrl + urllib.parse.urlencode(search_params)) as html:
             result = await html.text()
             self.data = []
             rss = feedparser.parse(result)

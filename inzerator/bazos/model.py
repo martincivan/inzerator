@@ -4,7 +4,8 @@ from dataclasses import dataclass
 @dataclass
 class SearchParams:
     hledat: str = ""
-    rub: str= "re"
+    rub: str= "re",
+    cat: str = "152"
     hlokalita: int = 83104
     humkreis: int = 25
     cenaod: str = ""
