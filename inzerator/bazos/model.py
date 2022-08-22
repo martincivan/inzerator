@@ -20,3 +20,12 @@ class FeedItem:
     summary: str
     image_link: str
     published: tuple[int]
+
+    def __str__(self) -> str:
+        return f"""
+        
+        %s - %s
+        %s
+        
+        """ % (self.title, self.price, self.link)
+

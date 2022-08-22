@@ -61,9 +61,10 @@ class AuthorChecker:
                 logging.warning("User pattern not matched.",
                                 {"listing_link": feed_item.link, "listing_text": listing_text})
                 return
-            if await self.author_storage.get(result.groups()[0]):
-                return False
-            return await self._load_author(self.session, result.groups()[0])
+            author_valid = await self.author_storage.get(result.groups()[0])
+            if author_valid is None:
+                author_valid = await self._load_author(self.session, result.groups()[0])
+            return author_valid
 
     async def _load_author(self, session, author_url: str) -> Optional[bool]:
         async with await self.session.get(author_url) as html:
