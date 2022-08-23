@@ -11,8 +11,11 @@ class DB:
 
     def __init__(self):
         # "postgresql+asyncpg://scott:tiger@localhost/test",
+        db_host = os.environ.get("DATABASE_URL")
+        if db_host and db_host.startswith("postgres://"):
+            db_host = db_host.replace("postgres://", "postgresql+asyncpg://", 1)
         self._engine = create_async_engine(
-            os.environ.get("DATABASE_URL"),
+            db_host,
             # echo=True,
         )
         self._maker = sessionmaker(
