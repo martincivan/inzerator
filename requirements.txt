@@ -3,3 +3,4 @@ aiosmtplib==1.1.6
 fastapi==0.80.0
 feedparser==6.0.10
 SQLAlchemy==1.4.40
+asyncpg==0.26.0
