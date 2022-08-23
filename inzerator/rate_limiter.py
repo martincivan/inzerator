@@ -9,7 +9,7 @@ class RateLimiter:
     Calls are rate-limited by host.
     https://quentin.pradet.me/blog/how-do-you-rate-limit-calls-with-aiohttp.html
     This class is not thread-safe."""
-    RATE = 2  # one request per second
+    RATE = 2  # requests per second
     MAX_TOKENS = 2
 
     def __init__(self, client):
