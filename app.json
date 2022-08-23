@@ -1,0 +1,12 @@
+{
+  "name": "Inzerator",
+  "description": "Listing helper tool",
+  "image": "heroku/python",
+  "repository": "https://github.com/martincivan/inzerator",
+  "keywords": ["python" ],
+  "addons": [ "heroku-postgresql" ],
+  "env": {
+  },
+  "environments": {
+  }
+}
