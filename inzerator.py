@@ -1,5 +1,5 @@
 import asyncio
-
+from datetime import datetime, timedelta
 import aiohttp
 
 from inzerator.bazos.bazos import Bazos
@@ -10,6 +10,7 @@ from inzerator.db.db import DB
 from inzerator.rate_limiter import RateLimiter
 from inzerator.users.inzerator_email import EmailSender
 from inzerator.users.searches import SearchStorage
+from inzerator.users.emails import EmailStorage
 
 BASE_URL = "https://www.bazos.sk/rss.php?"
 URL_PARAMS = {
@@ -22,9 +23,18 @@ URL_PARAMS = {
 }
 
 
+def next_send():
+    now = datetime.now()
+    for i in (8, 12, 18):
+        if now.hour < i:
+            return now.replace(hour=i, minute=0, second=0, microsecond=0)
+    return now.replace(hour=8, minute=0, second=0, microsecond=0) + timedelta(days=1)
+
+
 async def main():
     db = DB()
-    sender = EmailSender()
+    email_storage = EmailStorage(db.maker, db.engine)
+    sender = EmailSender(email_storage)
     async with aiohttp.ClientSession(
             timeout=aiohttp.ClientTimeout(total=20, connect=10, sock_read=10, sock_connect=10)) as session:
         limiter = RateLimiter(session)
@@ -35,6 +45,7 @@ async def main():
         for search in await search_storage.get_all():
             if email != search.user.email:
                 if payload != "":
+                    await email_storage.add(search.user_id, payload, next_send())
                     await sender.send_mail(email, payload)
                     payload = ""
                 email = search.user.email
@@ -43,8 +54,10 @@ async def main():
                                  search.price_from, search.price_to), search.user_id):
                 payload += str(result)
         if payload != "":
-            await sender.send_mail(email, payload)
+            await email_storage.add(search.user_id, payload, next_send())
         print("PAYLOAD: " + payload)
+        await sender.send_emails()
+
 
 if __name__ == "__main__":
     asyncio.run(main())

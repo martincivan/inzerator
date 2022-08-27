@@ -7,7 +7,7 @@ from inzerator.users.users import User
 from inzerator.users.searches import Search
 # noinspection PyUnresolvedReferences
 from inzerator.bazos.storage import Author, Listing
-
+from inzerator.users.emails import Email
 
 async def run():
     db = DB()

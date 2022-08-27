@@ -14,12 +14,12 @@ class DB:
         db_host = os.environ.get("DATABASE_URL")
         if db_host and db_host.startswith("postgres://"):
             db_host = db_host.replace("postgres://", "postgresql+asyncpg://", 1)
-        self._engine = create_async_engine(
+        self.engine = create_async_engine(
             db_host,
             # echo=True,
         )
         self._maker = sessionmaker(
-            self._engine, expire_on_commit=False, class_=AsyncSession
+            self.engine, expire_on_commit=False, class_=AsyncSession
         )
 
     @property
@@ -27,8 +27,8 @@ class DB:
         return self._maker
 
     async def disconnect(self):
-        await self._engine.dispose()
+        await self.engine.dispose()
 
     async def migrate(self):
-        async with self._engine.begin() as conn:
+        async with self.engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)

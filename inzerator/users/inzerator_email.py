@@ -6,14 +6,29 @@ import aiosmtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-MAIL_PARAMS = {'TLS': True, 'host': os.environ.get("SMTP_URL"), 'password': os.environ.get("SMTP_PASSWORD"), 'user': os.environ.get("SMTP_USER"), 'port': os.environ.get("SMTP_PORT")}
+from inzerator.users.emails import EmailStorage
+
+from datetime import datetime
+
+MAIL_PARAMS = {'TLS': True, 'host': os.environ.get("SMTP_URL"), 'password': os.environ.get("SMTP_PASSWORD"),
+               'user': os.environ.get("SMTP_USER"), 'port': os.environ.get("SMTP_PORT")}
 
 
 class EmailSender:
+
+    def __init__(self, email_storage: EmailStorage):
+        self.email_storage = email_storage
+
+    async def send_emails(self):
+        for e in await self.email_storage.get_to_send(datetime.now()):
+            await self.send_mail(e.user.email, e.text)
+            await self.email_storage.remove(e.id)
+
     async def send_mail(self, to: str, text: str):
         print(f"sending to %s : %s" % (to, text))
-        await send_mail_async(os.environ.get("SEND_FROM"), [to], "Inzerator", text)
-        print(f"sent to: " + to)
+        # await send_mail_async(os.environ.get("SEND_FROM"), [to], "Inzerator", text)
+        # print(f"sent to: " + to)
+
 
 async def send_mail_async(sender, to, subject, text, textType='plain', **params):
     """Send an outgoing email with the given parameters.
@@ -74,7 +89,7 @@ async def send_mail_async(sender, to, subject, text, textType='plain', **params)
 
 if __name__ == "__main__":
     email = "mcivanqutest@gmail.com"
-    co1 = send_mail_async( email,
+    co1 = send_mail_async(email,
                           ["martin.civan5@gmail.com"],
                           "Test 1",
                           'Test 1 '
