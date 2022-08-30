@@ -26,8 +26,8 @@ class EmailSender:
 
     async def send_mail(self, to: str, text: str):
         print(f"sending to %s : %s" % (to, text))
-        # await send_mail_async(os.environ.get("SEND_FROM"), [to], "Inzerator", text)
-        # print(f"sent to: " + to)
+        await send_mail_async(os.environ.get("SEND_FROM"), [to], "Inzerator", text)
+        print(f"sent to: " + to)
 
 
 async def send_mail_async(sender, to, subject, text, textType='plain', **params):
