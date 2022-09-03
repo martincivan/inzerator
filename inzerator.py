@@ -46,7 +46,6 @@ async def main():
             if email != search.user.email:
                 if payload != "":
                     await email_storage.add(search.user_id, payload, next_send())
-                    await sender.send_mail(email, payload)
                     payload = ""
                 email = search.user.email
             async for result in loader.load(
