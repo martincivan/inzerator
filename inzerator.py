@@ -40,14 +40,14 @@ async def main():
         limiter = RateLimiter(session)
         loader = Bazos(ListingStorage(db.maker), AuthorChecker(AuthorStorage(db.maker), 3, session=limiter), limiter)
         search_storage = SearchStorage(db.maker)
-        email = None
+        user = None
         payload = ""
         for search in await search_storage.get_all():
-            if email != search.user.email:
+            if user != search.user:
                 if payload != "":
-                    await email_storage.add(search.user_id, payload, next_send())
+                    await email_storage.add(user.id, payload, next_send())
                     payload = ""
-                email = search.user.email
+                user = search.user
             async for result in loader.load(
                     SearchParams(search.query, search.category, search.subcategory, search.zip, search.diameter,
                                  search.price_from, search.price_to), search.user_id):
