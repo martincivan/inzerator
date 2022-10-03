@@ -38,7 +38,9 @@ async def main():
     async with aiohttp.ClientSession(
             timeout=aiohttp.ClientTimeout(total=20, connect=10, sock_read=10, sock_connect=10)) as session:
         limiter = RateLimiter(session)
-        loader = Bazos(ListingStorage(db.maker), AuthorChecker(AuthorStorage(db.maker), 3, session=limiter), limiter)
+        listing_storage = ListingStorage(db.maker, db.engine)
+        storage = AuthorStorage(db.maker)
+        loader = Bazos(listing_storage, AuthorChecker(storage, 3, session=limiter), limiter)
         search_storage = SearchStorage(db.maker)
         user = None
         payload = ""
@@ -56,6 +58,7 @@ async def main():
             await email_storage.add(search.user_id, payload, next_send())
         print("PAYLOAD: " + payload)
         await sender.send_emails()
+        await listing_storage.remove_older(datetime.now() - timedelta(days=7))
 
 
 if __name__ == "__main__":

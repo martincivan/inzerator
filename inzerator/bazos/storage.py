@@ -12,7 +12,8 @@ from inzerator.users.users import User
 
 class ListingStorage:
 
-    def __init__(self, maker: sessionmaker):
+    def __init__(self, maker: sessionmaker, engine: Engine):
+        self.engine = engine
         self.maker = maker
 
     async def add(self, listing: FeedItem, user_id: int) -> bool:
@@ -25,6 +26,13 @@ class ListingStorage:
             except IntegrityError:
                 await session.rollback()
                 return False
+
+    async def remove_older(self, than: DateTime):
+        async with self.engine.connect() as conn:
+            conn.begin()
+            statement = text("""DELETE FROM listings WHERE processed_at < :than""")
+            await conn.execute(statement, {"than": than})
+            await conn.commit()
 
 
 class Listing(Base):
