@@ -75,5 +75,6 @@ class AuthorChecker:
                                 {"user_link": author_url, "user_text": listing_text})
                 return
             result = int(count.groups()[0]) <= self.listing_threshold
-            await self.author_storage.add(author_url, result)
+            if not result:
+                await self.author_storage.add(author_url, result)
             return result
