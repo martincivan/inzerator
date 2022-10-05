@@ -5,6 +5,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, TIMESTAMP, Boolean
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.engine import Engine
+from sqlalchemy.sql import text
 
 from inzerator.bazos.model import FeedItem
 from inzerator.db import Base
