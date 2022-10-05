@@ -28,7 +28,7 @@ class ListingStorage:
                 await session.rollback()
                 return False
 
-    async def remove_older(self, than: DateTime):
+    async def remove_older(self, than: datetime):
         async with self.engine.connect() as conn:
             conn.begin()
             statement = text("""DELETE FROM listings WHERE processed_at < :than""")
