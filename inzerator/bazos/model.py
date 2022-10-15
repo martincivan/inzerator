@@ -4,7 +4,7 @@ from dataclasses import dataclass
 @dataclass
 class SearchParams:
     hledat: str = ""
-    rub: str= "re",
+    rub: str = "re",
     cat: str = "152"
     hlokalita: int = 83104
     humkreis: int = 25
@@ -22,10 +22,9 @@ class FeedItem:
     published: tuple[int]
 
     def __str__(self) -> str:
-        return f"""
+        return """
         
         %s - %s
         %s
         
         """ % (self.title, self.price, self.link)
-

@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<title>Hodnotenie a inzeráty užívateľa: Ing. Jožko Mrkvička | Bazos.sk</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="description" content="Bezplatná inzercia, online bazár - kúpte si nový byt alebo predaj staré auto, toto všetko hravo zvládne náš Bazoš - Vaše inzeráty.">
+<meta name="google-play-app" content="app-id=cz.ackee.bazos">
+<meta name="apple-itunes-app" content="app-id=1195042966">
+<meta property="fb:admins" content="1055875657">
+<meta property="og:image" content="https://www.bazos.sk/obrazky/bazoslogoface.png">
+<meta name="ROBOTS" content="NOINDEX">
+<link rel="stylesheet" href="https://www.bazos.sk/bazos60hp.css" type="text/css"><link rel="preload" as="image" href="https://www.bazos.sk/obrazky/bazos.svg">
+<link rel="shortcut icon" HREF="https://www.bazos.sk/favicon.ico">
+<link rel="icon" sizes="192x192" href="https://www.bazos.sk/obrazky/icon-192x192.png">
+<link rel="apple-touch-icon" href="https://www.bazos.sk/apple-touch-icon.png">
+<link rel="search" type="application/opensearchdescription+xml" href="https://www.bazos.sk/search.xml" title="Bazoš.sk">
+<link rel="alternate" type="application/rss+xml" title="Bazos.sk - RSS" href="https://www.bazos.sk/rss.php">
+
+<script>
+var xhr = new XMLHttpRequest();
+var naseptavac_value = '';
+function naseptavac(value) {
+  if (value=='')  {
+  	naseptavac_value = '';
+  	document.getElementById('vysledek').innerHTML='';
+  	}
+else {
+	if (naseptavac_value == value) {
+		return false;
+	}
+	naseptavac_value = value;
+	setTimeout(function () {
+		if (naseptavac_value != value) {
+			return false;
+		}
+		xhr.onreadystatechange = function() {
+ 		 if (this.readyState == 4 && naseptavac_value == value){
+				document.getElementById('vysledek').innerHTML = this.responseText;
+			}
+ 		 };
+		xhr.open('GET', '/suggest.php?rubnas=HP&qnas='+encodeURIComponent(naseptavac_value));
+		xhr.send();
+	}, 250);
+}
+}
+
+var naseptavacpsc_value = '';
+function naseptavacpsc(value) {
+  if (value=='')  {
+  	naseptavacpsc_value = '';
+  	document.getElementById('vysledekpsc').innerHTML='<table cellpadding=\"3\" cellspacing=\"0\" class=\"tablenaspsc\"><tr><td class=\"act\" onclick=\"getLocation();\"><b>Inzeráty v okolí</b></td></tr></table>';
+  	}
+else {
+	if (naseptavacpsc_value == value) {
+		return false;
+	}
+	naseptavacpsc_value = value;
+	setTimeout(function () {
+		if (naseptavacpsc_value != value) {
+			return false;
+		}
+		xhr.onreadystatechange = function() {
+ 		 if (this.readyState == 4 && naseptavacpsc_value == value){
+				document.getElementById('vysledekpsc').innerHTML = this.responseText;
+			}
+ 		 };
+		xhr.open('GET', '/suggestpsc.php?qnaspsc='+encodeURIComponent(naseptavacpsc_value));
+		xhr.send();
+	}, 250);
+}
+}
+
+function getLocation() {
+if (navigator.geolocation) {navigator.geolocation.getCurrentPosition(showPosition);}
+else {document.getElementById('hlokalita').value = '';}
+}
+function showPosition(position) {
+		xhr.onreadystatechange = function() {
+ 		 if (this.readyState == 4){
+				document.getElementById('hlokalita').value = this.responseText;
+				document.forms['formt'].submit();
+			}
+ 		 };
+		xhr.open('GET', '/zip.php?latitude='+encodeURIComponent(position.coords.latitude)+'&longitude='+encodeURIComponent(position.coords.longitude));
+		xhr.send();
+}
+
+</script>
+<script src="https://www.bazos.sk/eucookiesk.js" async></script>
+</head>
+
+<body>
+
+<div class="sirka">
+
+
+<div class="listalogor">
+<div class="listalogol"><a href="https://www.bazos.sk/" title="Bazos.sk - Inzercia, inzeráty"><img src="https://www.bazos.sk/obrazky/bazos.svg" width="199" height="34" alt="Bazos.sk - Inzercia, inzeráty"></a></div>
+<div class="listalogom"> <img src="/ukflag.jpg" height="25px" width="38px"> <b>... inzercia pre každého</b></div>
+<div class="listalogop"><a href="https://www.bazos.sk/oblubene.php"><b>Obľúbené inzeráty</b></a> <a href="https://www.bazos.sk/moje-inzeraty.php"><b>Moje inzeráty</b></a> <a href="/pridat-inzerat.php"><b><span class=pridati>Pridať inzerát</span></b></a></div>
+</div>
+
+<form name="formt" id="formt" method=get action="/search.php">
+<div class="listah">
+<div class="rubriky">
+<b>
+Čo: <span class=vysokoli><span id="vysledek"></span><input type="search" onkeyup="naseptavac(this.value);" id=hledat name=hledat size="17" maxlength="256" value="" autocomplete="off" title="Čo? Hľadaný výraz" ></span>
+
+<select name="rubriky" onchange='this.form.submit();' title="Vyber rubriku">
+<option value="www" selected>Všetky rubriky</option>
+<option value="auto">Auto</option>
+<option value="deti">Deti</option>
+<option value="dom">Dom a záhrada</option>
+<option value="elektro">Elektro</option>
+<option value="foto">Foto</option>
+<option value="hudba">Hudba</option>
+<option value="knihy">Knihy</option>
+<option value="mobil">Mobily</option>
+<option value="motocykle">Motocykle</option>
+<option value="nabytok">Nábytok</option>
+<option value="oblecenie">Oblečenie</option>
+<option value="pc">PC</option>
+<option value="praca">Práca</option>
+<option value="reality">Reality</option>
+<option value="sluzby">Služby</option>
+<option value="sport">Šport</option>
+<option value="stroje">Stroje</option>
+<option value="vstupenky">Vstupenky</option>
+<option value="zvierata">Zvieratá</option>
+<option value="ostatne">Ostatné</option>
+</select>
+
+PSČ (miesto): <span class=vysokolipsc><span id="vysledekpsc"></span><input type="search" name="hlokalita" id="hlokalita" onkeyup="naseptavacpsc(this.value);" onclick="naseptavacpsc(this.value);" value="" size="5" maxlength="25" autocomplete="off" title="Kde? PSČ (miesto)" style="-webkit-appearance: none;"></span>
+Okolie: <input name="humkreis" title="Okolie v km" value="25" size="3" style="width: 25px;"> km
+Cena od: <input name=cenaod title="Cena od €" maxlength="12" size="4" value=""> - do: <input name=cenado title="Cena do €" maxlength="12" size="4" value=""> €  <input type="submit" name="Submit" value="Hľadať">
+<input type="hidden" name="kitx" value="ano"></b>
+</div>
+</div>
+</form>
+<div class="drobky"><a href=https://www.bazos.sk/>Hlavná stránka</a> > <b>Hodnotenie a inzeráty užívateľa</b></div><br>
+
+
+<div class="flexmain"><div class="menuleft"><div class="nadpismenu">Inzercia</div>
+<div class="barvalmenu">
+<div class="barvaleva">
+<div align="center">
+
+<br>
+<a href="https://auto.bazos.sk/"><b>Auto</b></a>
+Inzeráty Celkom: 191465<br>
+Za 24 hodín: 10585<br><br>
+
+<br>
+<a href="https://deti.bazos.sk/"><b>Deti</b></a>
+Inzeráty Celkom: 125716<br>
+Za 24 hodín: 2971<br><br>
+
+<br>
+<a href="https://dom.bazos.sk/"><b>Dom a záhrada</b></a>
+Inzeráty Celkom: 60625<br>
+Za 24 hodín: 2364<br><br>
+
+<br>
+<a href="https://elektro.bazos.sk/"><b>Elektro</b></a>
+Inzeráty Celkom: 46647<br>
+Za 24 hodín: 1677<br><br>
+
+<br>
+<a href="https://foto.bazos.sk/"><b>Foto</b></a>
+Inzeráty Celkom: 8739<br>
+Za 24 hodín: 355<br><br>
+
+<br>
+<a href="https://hudba.bazos.sk/"><b>Hudba</b></a>
+Inzeráty Celkom: 14504<br>
+Za 24 hodín: 575<br><br>
+
+<br>
+<a href="https://knihy.bazos.sk/"><b>Knihy</b></a>
+Inzeráty Celkom: 36534<br>
+Za 24 hodín: 917<br><br>
+
+<br>
+<a href="https://mobil.bazos.sk/"><b>Mobily</b></a>
+Inzeráty Celkom: 21756<br>
+Za 24 hodín: 1567<br><br>
+
+<br>
+<a href="https://motocykle.bazos.sk/"><b>Motocykle</b></a>
+Inzeráty Celkom: 29311<br>
+Za 24 hodín: 1110<br><br>
+
+<br>
+<a href="https://nabytok.bazos.sk/"><b>Nábytok</b></a>
+Inzeráty Celkom: 49222<br>
+Za 24 hodín: 1805<br><br>
+
+<br>
+<a href="https://oblecenie.bazos.sk/"><b>Oblečenie</b></a>
+Inzeráty Celkom: 153245<br>
+Za 24 hodín: 3758<br><br>
+
+<br>
+<a href="https://pc.bazos.sk/"><b>PC</b></a>
+Inzeráty Celkom: 36420<br>
+Za 24 hodín: 2305<br><br>
+
+<br>
+<a href="https://praca.bazos.sk/"><b>Práca</b></a>
+Inzeráty Celkom: 12119<br>
+Za 24 hodín: 1256<br><br>
+
+<br>
+<a href="https://reality.bazos.sk/"><b>Reality</b></a>
+Inzeráty Celkom: 51919<br>
+Za 24 hodín: 5129<br><br>
+
+<br>
+<a href="https://sluzby.bazos.sk/"><b>Služby</b></a>
+Inzeráty Celkom: 17440<br>
+Za 24 hodín: 2024<br><br>
+
+<br>
+<a href="https://stroje.bazos.sk/"><b>Stroje</b></a>
+Inzeráty Celkom: 35039<br>
+Za 24 hodín: 1611<br><br>
+
+<br>
+<a href="https://sport.bazos.sk/"><b>Šport</b></a>
+Inzeráty Celkom: 56418<br>
+Za 24 hodín: 2073<br><br>
+
+<br>
+<a href="https://vstupenky.bazos.sk/"><b>Vstupenky</b></a>
+Inzeráty Celkom: 1441<br>
+Za 24 hodín: 99<br><br>
+
+<br>
+<a href="https://zvierata.bazos.sk/"><b>Zvieratá</b></a>
+Inzeráty Celkom: 32489<br>
+Za 24 hodín: 1731<br><br>
+
+<br>
+<a href="https://ostatne.bazos.sk/"><b>Ostatné</b></a>
+Inzeráty Celkom: 95711<br>
+Za 24 hodín: 2969<br><br>
+
+</div>
+</div></div>
+
+<br><br>
+
+
+
+</div><div class="maincontent">
+
+<b>Užívateľ Ing. Jožko Mrkvička:</b><br><br>
+<form name="formm" method=get action="/hodnotenie.php">
+E-mail:
+<input type="email" name="mail" maxlength="256" size=30>
+Telefón:
+<input name=telefon maxlength="256" value="">
+<input type="submit" name="Submit" value="Zobraziť užívateľa" id="submit">
+</form>
+<br><br>
+
+<form name="formh" method=post action="/hodnotit.php">
+<input type="hidden" name="mail" value="">
+<input type="hidden" name="idphone" value="21658">
+<input type="hidden" name="jmeno" value="Ing. Jožko Mrkvička">
+<input type="submit" name="Submit" value="Ohodnotiť užívateľa" id="submit">
+</form>
+<br><br>
+
+<div class="listainzerat inzeratyflex">
+<div class="hodnocenitext">Všetky hodnotenia užívateľa (2):</div>
+<div class="hodnoceniznamenko"><b>Hodnotenie</b></div>
+<div class="hodnocenidatum">Dátum</div>
+</div>
+<div class="inzeraty inzeratyflex">
+<div class="hodnocenitext">
+<div class=popis>Ku konaniu podľa popisu sťažovateľa (nedostatočná komunikácia) mohlo dôjsť v čase extrémnej záťaže, ktorá bola zapríčinená najmä  výpadkom zamestnancov RK, za čo sa úprimne ospravedlňujeme.</div><br>
+Hodnotenie od: <b><a href="/hodnotenie.php?idmail=13417&idphone=21658&jmeno=Ing.+Stanislav+Vibransk%C3%BD">Ing. Jožko Mrkvička</a> </b> - z IP: 88.212.40.***
+</div>
+<div class="hodnoceniznamenko"><b></b></div>
+<div class="hodnocenidatum">14.10. 2022</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="hodnocenitext">
+<div class=popis>Tak neochotny realitak ze neodporucam do buducna nikomu ,nekomunikuje ignoruje smsky nedviha hovory ak mu clovek vyvolava za niekolko dni nieje schopny sa skontaktovat z majitelom a dohodnut stretnutie </div><br>
+Hodnotenie od: <b><a href="/hodnotenie.php?idmail=310173&idphone=&jmeno=Vrb">Vrb</a> </b> - z IP: 46.34.232.***
+</div>
+<div class="hodnoceniznamenko"><b><img src="/obrazky/minus.png" width="30" height="30" alt="Záporné" title="Záporné"></b></div>
+<div class="hodnocenidatum">12.10. 2022</div>
+</div>
+<br><br><br>
+<div class="listainzerat inzeratyflex">
+<div class="inzeratynadpis">Všetky inzeráty užívateľa (17):</div>
+<div class="inzeratycena"><b>Cena</b></div>
+<div class="inzeratylok">Lokalita</div>
+<div class="inzeratyview">Zobrazenie</div>
+</div>
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/143032833/kpt-nalepku-3-izb-prazsky-typ-6-m-loggia-kosice-stare-mesto.php"><img src="https://www.bazos.sk/img/1t/833/143032833.jpg?t=1665763091" class="obrazek" alt="KPT.NÁLEPKU-3 IZB PRAŽSKÝ TYP, 6m LOGGIA, KOŠICE-STARÉ MESTO" width="140" height="105"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/143032833/kpt-nalepku-3-izb-prazsky-typ-6-m-loggia-kosice-stare-mesto.php">KPT.NÁLEPKU-3 IZB PRAŽSKÝ TYP, 6m LOGGIA, KOŠICE-STARÉ MESTO</a></span><span class=velikost10> - <span title="TOP 20x Platí do 24.11. 2022" class="ztop">TOP</span> - [15.10. 2022]</span><br>
+<div class=popis>Ponúkame na predaj 3 izbový pražský typ bytu so 6 m loggiou vo vyhľadávanej lokalite Košíc, na ulici Kpt. Nálepku v Mestskej časti Košice - Staré Mesto, v tesnej blízkosti historického CENTRA mesta (5 min. pešou chôdzou).
+
+Byt s výmerou 68 m2 + 6 m2 loggia je po čiastočnej rekonštrukcii a nachádza ...</div><br><br>
+</div>
+<div class="inzeratycena"><b>  189 000 €</b></div>
+<div class="inzeratylok">Košice<br>040 01</div>
+<div class="inzeratyview">252 x</div>
+<div class="inzeratyakce">
+<a href="https://www.bazos.sk/report.php?idad=143032833&report=1" class="akce" rel="nofollow">Označiť zlý inzerát</a> <a href="https://www.bazos.sk/report.php?idad=143032833&report=2" class="akce" rel="nofollow">Chybnú kategóriu</a> <a href="https://www.bazos.sk/hodnotenie.php?idmail=13417&idphone=21658&jmeno=Ing.+Stanislav+Vibransk%C3%BD" class="akce" rel="nofollow">Ohodnotiť užívateľa</a> <a href="https://reality.bazos.sk/zmazat/143032833.php" class="akce" rel="nofollow">Zmazať/Upraviť/Topovať</a>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/143025816/muskatova-ul-15-izb-byt-kosice-zapad-terasa-5-posch.php"><img src="https://www.bazos.sk/img/1t/816/143025816.jpg?t=1665750612" class="obrazek" alt="MUŠKÁTOVÁ ul. - 1,5 IZB BYT, KOŠICE - ZÁPAD (TERASA),5.posch" width="140" height="105"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/143025816/muskatova-ul-15-izb-byt-kosice-zapad-terasa-5-posch.php">MUŠKÁTOVÁ ul. - 1,5 IZB BYT, KOŠICE - ZÁPAD (TERASA),5.posch</a></span><span class=velikost10> - <span title="TOP 20x Platí do 24.11. 2022" class="ztop">TOP</span> - [15.10. 2022]</span><br>
+<div class=popis>NOVÁ REKONŠTRUKCIA - Ponúkame na predaj 1,5 izbový byt vo vyhľadávanej lokalite Mestskej časti Košice - Západ (Terasa) na ulici Muškátová s výbornou občianskou vybavenosťou a dobrou dostupnosťou do centra mesta.
+
+Byt prešiel úplne NOVOU rekonštrukciou, pri ktorej boli použité kvalitné materiály -  ...</div><br><br>
+</div>
+<div class="inzeratycena"><b>  149 000 €</b></div>
+<div class="inzeratylok">Košice<br>040 11</div>
+<div class="inzeratyview">296 x</div>
+<div class="inzeratyakce">
+<a href="https://www.bazos.sk/report.php?idad=143025816&report=1" class="akce" rel="nofollow">Označiť zlý inzerát</a> <a href="https://www.bazos.sk/report.php?idad=143025816&report=2" class="akce" rel="nofollow">Chybnú kategóriu</a> <a href="https://www.bazos.sk/hodnotenie.php?idmail=13417&idphone=21658&jmeno=Ing.+Stanislav+Vibransk%C3%BD" class="akce" rel="nofollow">Ohodnotiť užívateľa</a> <a href="https://reality.bazos.sk/zmazat/143025816.php" class="akce" rel="nofollow">Zmazať/Upraviť/Topovať</a>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/143025269/priestranny-4-izb-byt-82-m2-loggia-bukurestska-ul-kosice.php"><img src="https://www.bazos.sk/img/1t/269/143025269.jpg?t=1665749666" class="obrazek" alt="PRIESTRANNÝ 4 IZB BYT 82 m2 + LOGGIA, BUKUREŠTSKÁ ul, KOŠICE" width="140" height="105"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/143025269/priestranny-4-izb-byt-82-m2-loggia-bukurestska-ul-kosice.php">PRIESTRANNÝ 4 IZB BYT 82 m2 + LOGGIA, BUKUREŠTSKÁ ul, KOŠICE</a></span><span class=velikost10> - <span title="TOP 20x Platí do 24.11. 2022" class="ztop">TOP</span> - [15.10. 2022]</span><br>
+<div class=popis>NOVÁ REKONŠTRUKCIA - Ponúkame na predaj slnečný PRIESTRANNÝ 4 izbový byt s loggiou, ktorý priešiel KOMPLETNOU nadštandardnou rekonštrukciou (nová elektroinštalácia, murované jadro, nové omietky, nové podlahy, bezpečnostné dvere, interiérové dvere, nové radiátory, kuchynská linka so zabudovanými kval ...</div><br><br>
+</div>
+<div class="inzeratycena"><b>  188 500 €</b></div>
+<div class="inzeratylok">Košice<br>040 13</div>
+<div class="inzeratyview">318 x</div>
+<div class="inzeratyakce">
+<a href="https://www.bazos.sk/report.php?idad=143025269&report=1" class="akce" rel="nofollow">Označiť zlý inzerát</a> <a href="https://www.bazos.sk/report.php?idad=143025269&report=2" class="akce" rel="nofollow">Chybnú kategóriu</a> <a href="https://www.bazos.sk/hodnotenie.php?idmail=13417&idphone=21658&jmeno=Ing.+Stanislav+Vibransk%C3%BD" class="akce" rel="nofollow">Ohodnotiť užívateľa</a> <a href="https://reality.bazos.sk/zmazat/143025269.php" class="akce" rel="nofollow">Zmazať/Upraviť/Topovať</a>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/143026375/rodinny-dom-8-km-od-kosic-vajkovce-okres-kosice-okolie.php"><img src="https://www.bazos.sk/img/1t/375/143026375.jpg?t=1665751288" class="obrazek" alt="RODINNÝ DOM 8 km od KOŠÍC, VAJKOVCE, okres. KOŠICE - OKOLIE" width="140" height="105"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/143026375/rodinny-dom-8-km-od-kosic-vajkovce-okres-kosice-okolie.php">RODINNÝ DOM 8 km od KOŠÍC, VAJKOVCE, okres. KOŠICE - OKOLIE</a></span><span class=velikost10> - <span title="TOP 10x Platí do 14.11. 2022" class="ztop">TOP</span> - [15.10. 2022]</span><br>
+<div class=popis>Ponúkame na predaj PRIESTRANNÝ samostatne stojací rodinný dom v tichej časti obce Vajkovce v okrese Košice - okolie s dobrou občianskou vybavenosťou a výbornou dostupnosťou do Košíc (8 km, 8 min. autom).
+
+Úžitková plocha domu je 200 m2, z toho zastavaná plocha domu je 117 m2. Dom sa nachádza na ro ...</div><br><br>
+</div>
+<div class="inzeratycena"><b>  249 000 €</b></div>
+<div class="inzeratylok">Košice-okolie<br>044 43</div>
+<div class="inzeratyview">135 x</div>
+<div class="inzeratyakce">
+<a href="https://www.bazos.sk/report.php?idad=143026375&report=1" class="akce" rel="nofollow">Označiť zlý inzerát</a> <a href="https://www.bazos.sk/report.php?idad=143026375&report=2" class="akce" rel="nofollow">Chybnú kategóriu</a> <a href="https://www.bazos.sk/hodnotenie.php?idmail=13417&idphone=21658&jmeno=Ing.+Stanislav+Vibransk%C3%BD" class="akce" rel="nofollow">Ohodnotiť užívateľa</a> <a href="https://reality.bazos.sk/zmazat/143026375.php" class="akce" rel="nofollow">Zmazať/Upraviť/Topovať</a>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/142533898/2-izb-byt-so-6-m-loggiou-9-posch-kosice.php"><img src="https://www.bazos.sk/img/1t/898/142533898.jpg?t=1664613185" class="obrazek" alt="2 IZB BYT so 6 m LOGGIOU, 8. posch., KOŠICE" width="140" height="105"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/142533898/2-izb-byt-so-6-m-loggiou-9-posch-kosice.php">2 IZB BYT so 6 m LOGGIOU, 8. posch., KOŠICE</a></span><span class=velikost10> - <span title="TOP 20x Platí do 11.11. 2022" class="ztop">TOP</span> - [15.10. 2022]</span><br>
+<div class=popis>Ponúkame na predaj slnečný 2 izbový byt s priestrannou 6 m loggiou s pekným výhľadom, ktorý prešiel vkusnou kompletnou rekonštrukciou na ulici Maurerova v Mestskej časti Košice - Dargovských hrdinov (Furča).
+
+Byt s výmerou 46 m2, z toho 6 m2 je loggia, sa nachádza na 8.posch./8 v obnovenom bytovom ...</div><br><br>
+</div>
+<div class="inzeratycena"><b>  134 990 €</b></div>
+<div class="inzeratylok">Košice<br>040 23</div>
+<div class="inzeratyview">2054 x</div>
+<div class="inzeratyakce">
+<a href="https://www.bazos.sk/report.php?idad=142533898&report=1" class="akce" rel="nofollow">Označiť zlý inzerát</a> <a href="https://www.bazos.sk/report.php?idad=142533898&report=2" class="akce" rel="nofollow">Chybnú kategóriu</a> <a href="https://www.bazos.sk/hodnotenie.php?idmail=13417&idphone=21658&jmeno=Ing.+Stanislav+Vibransk%C3%BD" class="akce" rel="nofollow">Ohodnotiť užívateľa</a> <a href="https://reality.bazos.sk/zmazat/142533898.php" class="akce" rel="nofollow">Zmazať/Upraviť/Topovať</a>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/142823475/3-izb-byt-so-6-m-logiou-po-kompletnej-rekonstrukcii-maurerova-ul-kosic.php"><img src="https://www.bazos.sk/img/1t/475/142823475.jpg?t=1665301508" class="obrazek" alt="3 IZB BYT so 6 m LOGIOU po KOMPL.REKONŠTR.,MAUREROVA, KOŠICE" width="140" height="105"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/142823475/3-izb-byt-so-6-m-logiou-po-kompletnej-rekonstrukcii-maurerova-ul-kosic.php">3 IZB BYT so 6 m LOGIOU po KOMPL.REKONŠTR.,MAUREROVA, KOŠICE</a></span><span class=velikost10> - <span title="TOP 10x Platí do 9.11. 2022" class="ztop">TOP</span> - [15.10. 2022]</span><br>
+<div class=popis>Ponúkame na predaj 3 izbový PRAŽSKÝ TYP bytu so 6 m loggiou s krásnym VÝHĽADOM, ktorý prešiel nadštandardnou kompletnou rekonštrukciou so zmenenou dispozíciou.
+
+V byte sú vstavané skrine na mieru, kuchynská linka na mieru s kvalitnými zabudovanými spotrebičmi, v kúpeľni je vaňa a sprchovací kút, k ...</div><br><br>
+</div>
+<div class="inzeratycena"><b>  210 000 €</b></div>
+<div class="inzeratylok">Košice<br>040 23</div>
+<div class="inzeratyview">677 x</div>
+<div class="inzeratyakce">
+<a href="https://www.bazos.sk/report.php?idad=142823475&report=1" class="akce" rel="nofollow">Označiť zlý inzerát</a> <a href="https://www.bazos.sk/report.php?idad=142823475&report=2" class="akce" rel="nofollow">Chybnú kategóriu</a> <a href="https://www.bazos.sk/hodnotenie.php?idmail=13417&idphone=21658&jmeno=Ing.+Stanislav+Vibransk%C3%BD" class="akce" rel="nofollow">Ohodnotiť užívateľa</a> <a href="https://reality.bazos.sk/zmazat/142823475.php" class="akce" rel="nofollow">Zmazať/Upraviť/Topovať</a>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/142260284/tatranska-ul-3-izb-byt-s-loggiou-3-posch-74-m2-kosice-stare-mesto.php"><img src="https://www.bazos.sk/img/1t/284/142260284.jpg?t=1665822304" class="obrazek" alt="BRANISKOVÁ ul. - 3 IZB BYT s LOGGIOU, 3.posch., 72m2, KOŠICE" width="140" height="105"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/142260284/tatranska-ul-3-izb-byt-s-loggiou-3-posch-74-m2-kosice-stare-mesto.php">BRANISKOVÁ ul. - 3 IZB BYT s LOGGIOU, 3.posch., 72m2, KOŠICE</a></span><span class=velikost10> - <span title="TOP 21x Platí do 5.11. 2022" class="ztop">TOP</span> - [15.10. 2022]</span><br>
+<div class=popis>Ponúkame na predaj PRIESTRANNÝ 3 izbový byt s loggiou v lukratívnej lokalite v Mestskej časti Košice - Staré Mesto na ulici BRANISKOVÁ s výbornou občianskou vybavenosťou a dobrou dostupnosťou do centra mesta (10 min. pešou chôdzou).
+
+Byt s výmerou 72 m2 + loggia prešiel čiastočnou rekonštrukciou a ...</div><br><br>
+</div>
+<div class="inzeratycena"><b>  189 900 €</b></div>
+<div class="inzeratylok">Košice<br>040 01</div>
+<div class="inzeratyview">1925 x</div>
+<div class="inzeratyakce">
+<a href="https://www.bazos.sk/report.php?idad=142260284&report=1" class="akce" rel="nofollow">Označiť zlý inzerát</a> <a href="https://www.bazos.sk/report.php?idad=142260284&report=2" class="akce" rel="nofollow">Chybnú kategóriu</a> <a href="https://www.bazos.sk/hodnotenie.php?idmail=13417&idphone=21658&jmeno=Ing.+Stanislav+Vibransk%C3%BD" class="akce" rel="nofollow">Ohodnotiť užívateľa</a> <a href="https://reality.bazos.sk/zmazat/142260284.php" class="akce" rel="nofollow">Zmazať/Upraviť/Topovať</a>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/142262921/2-izb-byt-s-loggiou-4posch-viedenska-ul-kosice-ov.php"><img src="https://www.bazos.sk/img/1t/921/142262921.jpg?t=1664953809" class="obrazek" alt="2 IZB BYT s LOGGIOU, 4.posch., VIEDENSKÁ ul. KOŠICE, OV" width="140" height="105"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/142262921/2-izb-byt-s-loggiou-4posch-viedenska-ul-kosice-ov.php">2 IZB BYT s LOGGIOU, 4.posch., VIEDENSKÁ ul. KOŠICE, OV</a></span><span class=velikost10> - <span title="TOP 20x Platí do 4.11. 2022" class="ztop">TOP</span> - [15.10. 2022]</span><br>
+<div class=popis>Ponúkame na predaj 2 izbový byt s loggiou v osobnom vlastníctve v tichej časti na ulici Viedenská v Košiciach.
+
+Byt s výmerou 50 m2 + 4 m2 loggia prešiel VKUSNOU čiastočnou rekonštrukciou a nachádza sa na IDEÁLNOM 4. poschodí/8.
+
+K bytu patrí pivnica.
+
+V blízkosti bytového domu je výborná obči ...</div><br><br>
+</div>
+<div class="inzeratycena"><b>  133 700 €</b></div>
+<div class="inzeratylok">Košice<br>040 13</div>
+<div class="inzeratyview">2025 x</div>
+<div class="inzeratyakce">
+<a href="https://www.bazos.sk/report.php?idad=142262921&report=1" class="akce" rel="nofollow">Označiť zlý inzerát</a> <a href="https://www.bazos.sk/report.php?idad=142262921&report=2" class="akce" rel="nofollow">Chybnú kategóriu</a> <a href="https://www.bazos.sk/hodnotenie.php?idmail=13417&idphone=21658&jmeno=Ing.+Stanislav+Vibransk%C3%BD" class="akce" rel="nofollow">Ohodnotiť užívateľa</a> <a href="https://reality.bazos.sk/zmazat/142262921.php" class="akce" rel="nofollow">Zmazať/Upraviť/Topovať</a>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/142155382/terasa-3-izb-prazsky-typ-6-m-loggia-kysucka-ul-kosice-zapad.php"><img src="https://www.bazos.sk/img/1t/382/142155382.jpg?t=1663752939" class="obrazek" alt="TERASA - 3 IZB PRAŽSKÝ TYP - 6 m LOGGIA, KYSUCKÁ ul., KOŠICE" width="140" height="105"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/142155382/terasa-3-izb-prazsky-typ-6-m-loggia-kysucka-ul-kosice-zapad.php">TERASA - 3 IZB PRAŽSKÝ TYP - 6 m LOGGIA, KYSUCKÁ ul., KOŠICE</a></span><span class=velikost10> - <span title="TOP 21x Platí do 2.11. 2022" class="ztop">TOP</span> - [15.10. 2022]</span><br>
+<div class=popis>NOVÁ REKONŠTRUKCIA - Ponúkame na predaj 3 izbový PRAŽSKÝ typ bytu so 6 m loggiou vo vyhľadávanej a tichej lokalite Mestskej časti Košice - Západ, na ulici Kysucká s výbornou občianskou vybavenosťou a dobrou dostupnosťou do centra mesta.
+
+Byt prešiel úplne NOVOU KOMPLETNOU rekonštrukciou: kuchynská ...</div><br><br>
+</div>
+<div class="inzeratycena"><b>  189 990 €</b></div>
+<div class="inzeratylok">Košice<br>040 11</div>
+<div class="inzeratyview">3664 x</div>
+<div class="inzeratyakce">
+<a href="https://www.bazos.sk/report.php?idad=142155382&report=1" class="akce" rel="nofollow">Označiť zlý inzerát</a> <a href="https://www.bazos.sk/report.php?idad=142155382&report=2" class="akce" rel="nofollow">Chybnú kategóriu</a> <a href="https://www.bazos.sk/hodnotenie.php?idmail=13417&idphone=21658&jmeno=Ing.+Stanislav+Vibransk%C3%BD" class="akce" rel="nofollow">Ohodnotiť užívateľa</a> <a href="https://reality.bazos.sk/zmazat/142155382.php" class="akce" rel="nofollow">Zmazať/Upraviť/Topovať</a>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/142825330/prenajom-3-izb-byt-s-loggiou-tatranska-ul-74-m2-kosice-stare-mesto.php"><img src="https://www.bazos.sk/img/1t/330/142825330.jpg?t=1665412385" class="obrazek" alt="PRENÁJOM - 3 IZB BYT s LOGGIOU, TATRANSKÁ ul., 74 m2, KOŠICE" width="140" height="105"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/142825330/prenajom-3-izb-byt-s-loggiou-tatranska-ul-74-m2-kosice-stare-mesto.php">PRENÁJOM - 3 IZB BYT s LOGGIOU, TATRANSKÁ ul., 74 m2, KOŠICE</a></span><span class=velikost10> - <span title="TOP 3x Platí do 27.10. 2022" class="ztop">TOP</span> - [15.10. 2022]</span><br>
+<div class=popis>Ponúkame na prenájom PRIESTRANNÝ 3 izbový byt s LOGGIOU v lukratívnej lokalite, neďaleko centra mesta, na ulici Tatranská, v Mestskej časti Košice - Staré Mesto.
+
+Byt s výmerou 74 m2 sa nachádza na 12.posch./12.
+
+K bytu patrí pivnica.
+
+Byt sa prenajíma maximálne pre 4 osoby a minimálne na 1 ro ...</div><br><br>
+</div>
+<div class="inzeratycena"><b>   650 €</b></div>
+<div class="inzeratylok">Košice<br>040 01</div>
+<div class="inzeratyview">489 x</div>
+<div class="inzeratyakce">
+<a href="https://www.bazos.sk/report.php?idad=142825330&report=1" class="akce" rel="nofollow">Označiť zlý inzerát</a> <a href="https://www.bazos.sk/report.php?idad=142825330&report=2" class="akce" rel="nofollow">Chybnú kategóriu</a> <a href="https://www.bazos.sk/hodnotenie.php?idmail=13417&idphone=21658&jmeno=Ing.+Stanislav+Vibransk%C3%BD" class="akce" rel="nofollow">Ohodnotiť užívateľa</a> <a href="https://reality.bazos.sk/zmazat/142825330.php" class="akce" rel="nofollow">Zmazať/Upraviť/Topovať</a>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/142263858/prenajom-2-izb-zariadeny-byt-popradska-ul-kosice-zapad-terasa.php"><img src="https://www.bazos.sk/img/1t/858/142263858.jpg?t=1664027123" class="obrazek" alt="PRENÁJOM - 2 IZB ZARIADENÝ BYT, POPRADSKÁ ul. KOŠICE - ZÁPAD" width="140" height="105"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/142263858/prenajom-2-izb-zariadeny-byt-popradska-ul-kosice-zapad-terasa.php">PRENÁJOM - 2 IZB ZARIADENÝ BYT, POPRADSKÁ ul. KOŠICE - ZÁPAD</a></span><span class=velikost10> - <span title="TOP 10x Platí do 25.10. 2022" class="ztop">TOP</span> - [15.10. 2022]</span><br>
+<div class=popis>Ponúkame na prenájom 2 izbový zariadený byt v lukratívnej lokalite v mestskej časti Košice - Západ (Terasa) na ulici Popradská s výbornou občianskou vybavenosťou a dobrou dostupnosťou do centra mesta.
+
+Byt prešiel vkusnou kompletnou rekonštrukciou a prenajíma sa kompletne zariadený.
+
+Byt je vhod ...</div><br><br>
+</div>
+<div class="inzeratycena"><b>   550 €</b></div>
+<div class="inzeratylok">Košice<br>040 11</div>
+<div class="inzeratyview">3316 x</div>
+<div class="inzeratyakce">
+<a href="https://www.bazos.sk/report.php?idad=142263858&report=1" class="akce" rel="nofollow">Označiť zlý inzerát</a> <a href="https://www.bazos.sk/report.php?idad=142263858&report=2" class="akce" rel="nofollow">Chybnú kategóriu</a> <a href="https://www.bazos.sk/hodnotenie.php?idmail=13417&idphone=21658&jmeno=Ing.+Stanislav+Vibransk%C3%BD" class="akce" rel="nofollow">Ohodnotiť užívateľa</a> <a href="https://reality.bazos.sk/zmazat/142263858.php" class="akce" rel="nofollow">Zmazať/Upraviť/Topovať</a>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/141719075/2-izb-tehlovy-byt-po-rekonstrukcii-kosice-stare-mesto-zimna-ul.php"><img src="https://www.bazos.sk/img/1t/075/141719075.jpg?t=1662753262" class="obrazek" alt="2 IZB TEHLOVÝ BYT po REKONŠTR., KOŠICE - STARÉ MESTO, ZIMNÁ" width="140" height="105"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/141719075/2-izb-tehlovy-byt-po-rekonstrukcii-kosice-stare-mesto-zimna-ul.php">2 IZB TEHLOVÝ BYT po REKONŠTR., KOŠICE - STARÉ MESTO, ZIMNÁ</a></span><span class=velikost10> - <span title="TOP 20x Platí do 20.10. 2022" class="ztop">TOP</span> - [15.10. 2022]</span><br>
+<div class=popis>Ponúkame na predaj veľmi pekný CHARIZMATICKÝ 2 izbový byt v tehlovom bytovom dome vo vyhľadávanej lokalite Mestskej časti Košice - Staré Mesto, na ulici Zimná blízko centra mesta (10 min. pešou chôdzou od Hlavnej ulice) s dobrou občianskou vybavenosťou.
+
+Byt s výmerou 49 m2, po veľmi VKUSNEJ kompl ...</div><br><br>
+</div>
+<div class="inzeratycena"><b>  175 000 €</b></div>
+<div class="inzeratylok">Košice<br>040 01</div>
+<div class="inzeratyview">3538 x</div>
+<div class="inzeratyakce">
+<a href="https://www.bazos.sk/report.php?idad=141719075&report=1" class="akce" rel="nofollow">Označiť zlý inzerát</a> <a href="https://www.bazos.sk/report.php?idad=141719075&report=2" class="akce" rel="nofollow">Chybnú kategóriu</a> <a href="https://www.bazos.sk/hodnotenie.php?idmail=13417&idphone=21658&jmeno=Ing.+Stanislav+Vibransk%C3%BD" class="akce" rel="nofollow">Ohodnotiť užívateľa</a> <a href="https://reality.bazos.sk/zmazat/141719075.php" class="akce" rel="nofollow">Zmazať/Upraviť/Topovať</a>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/141718834/muskatova-ul-15-izb-byt-kosice-zapad-terasa-5posch.php"><img src="https://www.bazos.sk/img/1t/834/141718834.jpg?t=1665762853" class="obrazek" alt="CHATA NA CELOROČNÉ BÝVANIE BLÍZKO KOŠÍC, GEČA,KOŠICE-OKOLIE" width="140" height="105"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/141718834/muskatova-ul-15-izb-byt-kosice-zapad-terasa-5posch.php">CHATA NA CELOROČNÉ BÝVANIE BLÍZKO KOŠÍC, GEČA,KOŠICE-OKOLIE</a></span><span class=velikost10> - <span title="TOP 20x Platí do 20.10. 2022" class="ztop">TOP</span> - [15.10. 2022]</span><br>
+<div class=popis>Ponúkame na predaj veľmi peknú chatu celoročne obyvateľnú blízko jazera v obci Geča, okres Košice - okolie s dobrou dostupnosťou do Košíc.
+
+Chata sa nachádza sa na pozemku s pekným trávnikom s výmerou 400 m2, na ktorom je nová studňa s hĺbkou 20 m a vonkajší krb s príjemným vonkajším sedením. Na p ...</div><br><br>
+</div>
+<div class="inzeratycena"><b>  169 000 €</b></div>
+<div class="inzeratylok">Košice-okolie<br>044 10</div>
+<div class="inzeratyview">2386 x</div>
+<div class="inzeratyakce">
+<a href="https://www.bazos.sk/report.php?idad=141718834&report=1" class="akce" rel="nofollow">Označiť zlý inzerát</a> <a href="https://www.bazos.sk/report.php?idad=141718834&report=2" class="akce" rel="nofollow">Chybnú kategóriu</a> <a href="https://www.bazos.sk/hodnotenie.php?idmail=13417&idphone=21658&jmeno=Ing.+Stanislav+Vibransk%C3%BD" class="akce" rel="nofollow">Ohodnotiť užívateľa</a> <a href="https://reality.bazos.sk/zmazat/141718834.php" class="akce" rel="nofollow">Zmazať/Upraviť/Topovať</a>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/142087646/rodinny-dom-ulica-kupeckeho-kosice-juh.php"><img src="https://www.bazos.sk/img/1t/646/142087646.jpg?t=1663599090" class="obrazek" alt="RODINNÝ DOM, ulica KUPECKÉHO, KOŠICE - JUH" width="140" height="105"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/142087646/rodinny-dom-ulica-kupeckeho-kosice-juh.php">RODINNÝ DOM, ulica KUPECKÉHO, KOŠICE - JUH</a></span><span class=velikost10> - <span title="TOP 10x Platí do 20.10. 2022" class="ztop">TOP</span> - [15.10. 2022]</span><br>
+<div class=popis>Ponúkame na predaj priestranný 5 izbový samostatne stojací TEHLOVÝ rodinný dom v tichej a hlavne lukratívnej lokalite v Mestskej časti Košice Juh, na ulici KUPECKÉHO s výbornou občianskou vybavenosťou a dostupnosťou do centra mesta (iba 10 min. pešou chôdzou na Hlavnú ulicu).
+
+Dom je určený pre ná ...</div><br><br>
+</div>
+<div class="inzeratycena"><b>  449 000 €</b></div>
+<div class="inzeratylok">Košice<br>040 01</div>
+<div class="inzeratyview">1645 x</div>
+<div class="inzeratyakce">
+<a href="https://www.bazos.sk/report.php?idad=142087646&report=1" class="akce" rel="nofollow">Označiť zlý inzerát</a> <a href="https://www.bazos.sk/report.php?idad=142087646&report=2" class="akce" rel="nofollow">Chybnú kategóriu</a> <a href="https://www.bazos.sk/hodnotenie.php?idmail=13417&idphone=21658&jmeno=Ing.+Stanislav+Vibransk%C3%BD" class="akce" rel="nofollow">Ohodnotiť užívateľa</a> <a href="https://reality.bazos.sk/zmazat/142087646.php" class="akce" rel="nofollow">Zmazať/Upraviť/Topovať</a>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/142189692/rodinny-dom-iba-8-km-od-kosic-vajkovce-okres-kosice-okolie.php"><img src="https://www.bazos.sk/img/1t/692/142189692.jpg?t=1665751113" class="obrazek" alt="CHATA CELOROČNE OBYVATEĽNÁ,DRUŽSTEVNÁ pri HORNÁDE,NOVOSTAVBA" width="140" height="105"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/142189692/rodinny-dom-iba-8-km-od-kosic-vajkovce-okres-kosice-okolie.php">CHATA CELOROČNE OBYVATEĽNÁ,DRUŽSTEVNÁ pri HORNÁDE,NOVOSTAVBA</a></span><span class=velikost10> - <span title="TOP 5x Platí do 17.10. 2022" class="ztop">TOP</span> - [15.10. 2022]</span><br>
+<div class=popis>Ponúkame na predaj novostavbu dvojpodlažnej chaty (skolaudovanú v roku 2020) na celoročné bývanie iba 10 km od Košíc v obci Družstevná pri Hornáde, okres Košice – okolie.
+
+Chata so sedlovou strechou pokrytá plechovou krytinou značky Ruuki je postavená na betónovom základe, je zateplená z vnútra aj ...</div><br><br>
+</div>
+<div class="inzeratycena"><b>  123 990 €</b></div>
+<div class="inzeratylok">Košice-okolie<br>044 31</div>
+<div class="inzeratyview">1564 x</div>
+<div class="inzeratyakce">
+<a href="https://www.bazos.sk/report.php?idad=142189692&report=1" class="akce" rel="nofollow">Označiť zlý inzerát</a> <a href="https://www.bazos.sk/report.php?idad=142189692&report=2" class="akce" rel="nofollow">Chybnú kategóriu</a> <a href="https://www.bazos.sk/hodnotenie.php?idmail=13417&idphone=21658&jmeno=Ing.+Stanislav+Vibransk%C3%BD" class="akce" rel="nofollow">Ohodnotiť užívateľa</a> <a href="https://reality.bazos.sk/zmazat/142189692.php" class="akce" rel="nofollow">Zmazať/Upraviť/Topovať</a>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/142153347/rodinny-dom-na-prenajom-novostavba-4-izby-kosice-krasna.php"><img src="https://www.bazos.sk/img/1t/347/142153347.jpg?t=1663836954" class="obrazek" alt="RODINNÝ DOM NA PRENÁJOM - NOVOSTAVBA, 4 IZBY, KOŠICE-KRÁSNA" width="140" height="105"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/142153347/rodinny-dom-na-prenajom-novostavba-4-izby-kosice-krasna.php">RODINNÝ DOM NA PRENÁJOM - NOVOSTAVBA, 4 IZBY, KOŠICE-KRÁSNA</a></span><span class=velikost10> - <span title="TOP 5x Platí do 16.10. 2022" class="ztop">TOP</span> - [15.10. 2022]</span><br>
+<div class=popis>Ponúkame na prenájom modernú 4 izbovú novostavbu rodinného domu s obytnou plochou 140 m2 a rozlohou pozemku 500 m2 v novovybudovanej lokalite, na začiatku Krásnej a na konci sídliska Nad Jazerom, v Mestskej časti Košice - Krásna.
+
+Dom je kvalitne a moderne zariadený pre náročného a zodpovedného ná ...</div><br><br>
+</div>
+<div class="inzeratycena"><b>  1 199 €</b></div>
+<div class="inzeratylok">Košice<br>040 18</div>
+<div class="inzeratyview">1688 x</div>
+<div class="inzeratyakce">
+<a href="https://www.bazos.sk/report.php?idad=142153347&report=1" class="akce" rel="nofollow">Označiť zlý inzerát</a> <a href="https://www.bazos.sk/report.php?idad=142153347&report=2" class="akce" rel="nofollow">Chybnú kategóriu</a> <a href="https://www.bazos.sk/hodnotenie.php?idmail=13417&idphone=21658&jmeno=Ing.+Stanislav+Vibransk%C3%BD" class="akce" rel="nofollow">Ohodnotiť užívateľa</a> <a href="https://reality.bazos.sk/zmazat/142153347.php" class="akce" rel="nofollow">Zmazať/Upraviť/Topovať</a>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/141700328/prenajom-luxusne-zariadeneho-rodinneho-domu-kosice.php"><img src="https://www.bazos.sk/img/1t/328/141700328.jpg?t=1664812880" class="obrazek" alt="PRENÁJOM LUXUSNE ZARIADENÉHO RODINNÉHO DOMU - KOŠICE" width="140" height="105"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/141700328/prenajom-luxusne-zariadeneho-rodinneho-domu-kosice.php">PRENÁJOM LUXUSNE ZARIADENÉHO RODINNÉHO DOMU - KOŠICE</a></span><span class=velikost10> - <span title="TOP 5x Platí do 4.10. 2022" class="ztop">TOP</span> - [4.10. 2022]</span><br>
+<div class=popis>Ponúkame na prenájom výnimočne moderne a kvalitne zariadený rodinný dom známym košickým architektom.
+
+Táto luxusná nehnuteľnosť je naozaj výnimočná, a to z viacerých dôvodov: elegantný moderný dizajn, výborná dispozícia, kompletne kvalitné vybavenie domu, tiché prostredie, dobrá dostupnosť do cent ...</div><br><br>
+</div>
+<div class="inzeratycena"><b>  1 350 €</b></div>
+<div class="inzeratylok">Košice<br>040 23</div>
+<div class="inzeratyview">1567 x</div>
+<div class="inzeratyakce">
+<a href="https://www.bazos.sk/report.php?idad=141700328&report=1" class="akce" rel="nofollow">Označiť zlý inzerát</a> <a href="https://www.bazos.sk/report.php?idad=141700328&report=2" class="akce" rel="nofollow">Chybnú kategóriu</a> <a href="https://www.bazos.sk/hodnotenie.php?idmail=13417&idphone=21658&jmeno=Ing.+Stanislav+Vibransk%C3%BD" class="akce" rel="nofollow">Ohodnotiť užívateľa</a> <a href="https://reality.bazos.sk/zmazat/141700328.php" class="akce" rel="nofollow">Zmazať/Upraviť/Topovať</a>
+</div>
+</div>
+<br>
+</div></div><br>
+
+&copy;2022 Bazoš - <b>Inzercia, bazár</b><br>
+<a href="https://www.bazos.sk/pomoc.php">Pomoc</a>, <a href="https://www.bazos.sk/otazky.php">Otázky</a>, <a href="https://www.bazos.sk/hodnotenie.php">Hodnotenie</a>, <a href="https://www.bazos.sk/kontakt.php">Kontakt</a>, <a href="https://www.bazos.sk/reklama.php">Reklama</a>, <a href="https://www.bazos.sk/podmienky.php">Podmienky</a>, <a href="https://www.bazos.sk/ochrana-udajov.php">Ochrana údajov</a>, <a href="https://www.bazos.sk/rss.php">RSS</a>, <a href="/hodnotenie.php?idmail=13417&idphone=21658&jmeno=Ing.+Stanislav+Vibransk%C3%BD&vkm=m" rel="nofollow">Mobilná verzia</a><br>
+Inzeráty celkom:<b>
+1076760</b>, inzercia za 24 hodín: <b>46881</b><br><br>
+<a href="https://www.bazos.sk/mapa-kategorie.php">Mapa kategórií</a>, <a href="https://www.bazos.sk/mapa-search.php">Najvyhľadávanejšie výrazy</a>, Tmavý motív: <a href="/?darkmode=1">vypnutý</a><br>
+Krajiny: <a href="https://www.bazos.sk">Slovensko</a>, <a href="https://www.bazos.cz">Česká republika</a>, <a href="https://www.bazos.pl">Poľsko</a>, <a href="https://www.bazos.at">Rakúsko</a>
+<br>
+
+<br>
+</div>
+
+<script>
+const cyrb53 = function(str, seed = 0) {
+   let h1 = 0xdeadbeef ^ seed,
+      h2 = 0x41c6ce57 ^ seed;
+   for (let i = 0, ch; i < str.length; i++) {
+      ch = str.charCodeAt(i);
+      h1 = Math.imul(h1 ^ ch, 2654435761);
+      h2 = Math.imul(h2 ^ ch, 1597334677);
+   }
+   h1 = Math.imul(h1 ^ h1 >>> 16, 2246822507) ^ Math.imul(h2 ^ h2 >>> 13, 3266489909);
+   h2 = Math.imul(h2 ^ h2 >>> 16, 2246822507) ^ Math.imul(h1 ^ h1 >>> 13, 3266489909);
+   return 4294967296 * (2097151 & h2) + (h1 >>> 0);
+};
+
+let clientIP = "91.127.77.87";
+let validityInterval = Math.round (new Date() / 1000 / 3600 / 24 / 4);
+let clientIDSource = clientIP + ";" + window.location.host + ";" + navigator.userAgent + ";" + navigator.language + ";" + validityInterval;
+let clientIDHashed = cyrb53(clientIDSource).toString(16);
+
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-58407-7', {
+   'storage': 'none',
+   'clientId': clientIDHashed
+});
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+
+</body>
+</html>

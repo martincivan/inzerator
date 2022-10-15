@@ -1,7 +1,7 @@
 from typing import AsyncIterable
 
 from inzerator.bazos.model import FeedItem
-from inzerator.bazos.rss import Loader, SearchParams, AuthorChecker
+from inzerator.bazos.rss import Loader, SearchParams, AuthorLoader
 from inzerator.bazos.storage import ListingStorage
 from inzerator.rate_limiter import RateLimiter
 
@@ -17,7 +17,7 @@ class Bazos:
         "cenado": ""
     }
 
-    def __init__(self, listing_storage: ListingStorage, user_checker: AuthorChecker, session: RateLimiter):
+    def __init__(self, listing_storage: ListingStorage, user_checker: AuthorLoader, session: RateLimiter):
         self.session = session
         self.listing_storage = listing_storage
         self.user_checker = user_checker
