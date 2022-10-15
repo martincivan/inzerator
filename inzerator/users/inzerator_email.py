@@ -25,9 +25,9 @@ class EmailSender:
             await self.email_storage.remove(e.id)
 
     async def send_mail(self, to: str, text: str):
-        print(f"sending to %s : %s" % (to, text))
+        print("sending to %s : %s" % (to, text))
         await send_mail_async(os.environ.get("SEND_FROM"), [to], "Inzerator", text)
-        print(f"sent to: " + to)
+        print("sent to: " + to)
 
 
 async def send_mail_async(sender, to, subject, text, textType='plain', **params):
@@ -67,8 +67,10 @@ async def send_mail_async(sender, to, subject, text, textType='plain', **params)
     msg['Subject'] = subject
     msg['From'] = sender
     msg['To'] = ', '.join(to)
-    if len(cc): msg['Cc'] = ', '.join(cc)
-    if len(bcc): msg['Bcc'] = ', '.join(bcc)
+    if len(cc):
+        msg['Cc'] = ', '.join(cc)
+    if len(bcc):
+        msg['Bcc'] = ', '.join(bcc)
 
     msg.attach(MIMEText(text, textType, 'utf-8'))
 

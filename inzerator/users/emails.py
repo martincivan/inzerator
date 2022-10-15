@@ -1,6 +1,5 @@
 import datetime
-from sqlite3 import IntegrityError
-from typing import Optional, List
+from typing import List
 
 from sqlalchemy import Column, Integer, ForeignKey, TIMESTAMP, Text, select, delete
 from sqlalchemy.engine import Engine

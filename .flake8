@@ -1,0 +1,8 @@
+[flake8]
+exclude =
+    venv,
+extend-ignore = E501,W605
+per-file-ignores =
+    # imported but unused
+    migrate.py: F401
+    inzerator/bazos/model.py: W293

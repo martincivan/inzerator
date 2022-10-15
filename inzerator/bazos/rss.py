@@ -1,7 +1,9 @@
+import dataclasses
 import re
 import urllib.parse
 from typing import Optional, AsyncIterable
-
+from bs4 import BeautifulSoup
+from functools import reduce
 import feedparser
 import logging
 
@@ -28,7 +30,7 @@ class Loader:
             yield i
 
     async def load(self):
-        search_params = {k:v for k,v in self.search_params.__dict__.items() if v is not None}
+        search_params = {k: v for k, v in self.search_params.__dict__.items() if v is not None}
         async with await self.session.get(self.baseUrl + urllib.parse.urlencode(search_params)) as html:
             result = await html.text()
             self.data = []
@@ -44,14 +46,39 @@ class Loader:
                              published=record.published_parsed))
 
 
-class AuthorChecker:
+@dataclasses.dataclass
+class AuthorData:
+    name: str
+    listing_count: int
+    listing_urls: list[str]
+    url: str
 
-    def __init__(self, author_storage: AuthorStorage, listing_threshold: int, session: RateLimiter):
+
+class AuthorValidator:
+
+    def __init__(self, real_listing_threshold: int):
+        self.real_listing_threshold = real_listing_threshold
+
+    def validate(self, data: AuthorData) -> bool:
+        return self.validate_listings(data.listing_urls) and self.validate_name(data.name)
+
+    def validate_listings(self, urls: list[str]) -> bool:
+        count = reduce(lambda x, y: x + 1, filter(lambda u: u.startswith("https://reality.bazos.sk/inzerat/"), urls), 0)
+        return count < self.real_listing_threshold
+
+    def validate_name(self, name: str) -> bool:
+        pattern = '.*[A-Z]{3}.*'
+        return re.search(pattern, name) is None and not any(sub in name for sub in ["S.R.O", "s.r.o", "real", "Real", "REAL"])
+
+
+class AuthorLoader:
+
+    def __init__(self, author_storage: AuthorStorage, session: RateLimiter, author_validator: AuthorValidator):
         self.session = session
-        self.listing_threshold = listing_threshold
         self.author_storage = author_storage
         self.user_pattern = "\"(https://www.bazos.sk/hodnotenie.php\\?[^\s]*)\""
         self.user_listing_number = "Všetky inzeráty užívateľa \((\d+)\)\:"
+        self.author_validator = author_validator
 
     async def load(self, feed_item: FeedItem) -> Optional[bool]:
         async with await self.session.get(feed_item.link) as html:
@@ -63,18 +90,53 @@ class AuthorChecker:
                 return
             author_valid = await self.author_storage.get(result.groups()[0])
             if author_valid is None:
-                author_valid = await self._load_author(self.session, result.groups()[0])
+                author_valid = await self._validate_author(self.session, result.groups()[0])
             return author_valid
 
-    async def _load_author(self, session, author_url: str) -> Optional[bool]:
+    async def _validate_author(self, session, author_url: str) -> Optional[bool]:
         async with await self.session.get(author_url) as html:
             listing_text = await html.text()
-            count = re.search(self.user_listing_number, listing_text)
-            if count is None or not len(count.groups()):
-                logging.warning("User listing count pattern not matched.",
-                                {"user_link": author_url, "user_text": listing_text})
-                return
-            result = int(count.groups()[0]) <= self.listing_threshold
+            parser = AuthorDataParser()
+            data = parser.parse(listing_text, author_url)
+            result = self.author_validator.validate(data)
             if not result:
                 await self.author_storage.add(author_url, result)
             return result
+
+
+def _parse_name(html: str, url: str) -> str:
+    regex = "Užívateľ (.+):"
+    result = re.search(regex, html)
+    if result is None or not len(result.groups()):
+        logging.warning("Author name pattern not matched.", {"link": url})
+        return ""
+    return result.groups()[0]
+
+
+def _parse_listing_count(html: str, url: str) -> int:
+    regex = "Všetky inzeráty užívateľa \((\d+)\)\:"
+    result = re.search(regex, html)
+    if result is None or not len(result.groups()):
+        logging.warning("Listing count pattern not matched.", {"link": url})
+        return 0
+    return int(result.groups()[0])
+
+
+def _parse_listings(html: str, url: str) -> list[str]:
+    parser = BeautifulSoup(html, features="lxml")
+    parts = parser.find_all(class_="inzeratynadpis")
+    if not len(parts):
+        logging.warning("List of listing not matched", {"link": url})
+        return []
+    parts.pop(0)
+    return list(map(lambda e: e.next.get("href"), parts))
+
+
+class AuthorDataParser:
+
+    def parse(self, html: str, url: str) -> AuthorData:
+        name = _parse_name(html, url)
+        listing_count = _parse_listing_count(html, url)
+        listing_urls = _parse_listings(html, url)
+
+        return AuthorData(name, listing_count, listing_urls, url)

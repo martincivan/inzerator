@@ -4,7 +4,7 @@ import aiohttp
 
 from inzerator.bazos.bazos import Bazos
 from inzerator.bazos.model import SearchParams
-from inzerator.bazos.rss import AuthorChecker
+from inzerator.bazos.rss import AuthorLoader, AuthorValidator
 from inzerator.bazos.storage import ListingStorage, AuthorStorage
 from inzerator.db.db import DB
 from inzerator.rate_limiter import RateLimiter
@@ -40,7 +40,7 @@ async def main():
         limiter = RateLimiter(session)
         listing_storage = ListingStorage(db.maker, db.engine)
         storage = AuthorStorage(db.maker)
-        loader = Bazos(listing_storage, AuthorChecker(storage, 3, session=limiter), limiter)
+        loader = Bazos(listing_storage, AuthorLoader(author_storage=storage, session=limiter, author_validator=AuthorValidator(3)), limiter)
         search_storage = SearchStorage(db.maker)
         user = None
         payload = ""

@@ -9,6 +9,7 @@ from inzerator.users.searches import Search
 from inzerator.bazos.storage import Author, Listing
 from inzerator.users.emails import Email
 
+
 async def run():
     db = DB()
     await db.migrate()
