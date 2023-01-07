@@ -1,4 +1,9 @@
 from dataclasses import dataclass
+from hashlib import md5
+from urllib.parse import unquote, urlparse
+from pathlib import PurePosixPath
+
+from aiohttp import ClientResponse
 
 
 @dataclass
@@ -28,3 +33,24 @@ class FeedItem:
         %s
         
         """ % (self.title, self.price, self.link)
+
+    @property
+    def ad_id(self) -> int:
+        return int(PurePosixPath(unquote(urlparse(self.link).path)).parts[2])
+
+
+class BazosImage:
+
+    def __init__(self, url: str, data: ClientResponse) -> None:
+        super().__init__()
+        self.url = url
+        self._data = data
+
+    @property
+    async def data(self):
+        return await self._data.read()
+
+    @property
+    async def hash(self):
+        data = await self._data.read()
+        return md5(data).hexdigest()

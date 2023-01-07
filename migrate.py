@@ -6,7 +6,7 @@ from inzerator.users.users import User
 # noinspection PyUnresolvedReferences
 from inzerator.users.searches import Search
 # noinspection PyUnresolvedReferences
-from inzerator.bazos.storage import Author, Listing
+from inzerator.bazos.storage import Author, Listing, Image
 from inzerator.users.emails import Email
 
 
