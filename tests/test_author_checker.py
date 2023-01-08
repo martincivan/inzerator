@@ -32,9 +32,12 @@ class AuthorParserTest(TestCase):
     def test_valid(self):
         parser = AuthorDataParser()
         with open(filepath) as f:
-            result = parser.parse(f.read(), "aaa")
+            result = parser.parse(f.read(), "aaa", None)
             expected = AuthorData('Ing. Jožko Mrkvička', 17, LISTING_URLS,
                                   "aaa")
+            self.assertEqual(result, expected)
+            f.seek(0)
+            result = parser.parse(f.read(), "aaa", "Ing. Jožko Mrkvička")
             self.assertEqual(result, expected)
 
     def test_name_validation(self):
