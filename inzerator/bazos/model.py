@@ -35,8 +35,8 @@ class FeedItem:
         """ % (self.title, self.price, self.link)
 
     @property
-    def ad_id(self) -> int:
-        return int(PurePosixPath(unquote(urlparse(self.link).path)).parts[2])
+    def ad_id(self) -> str:
+        return PurePosixPath(unquote(urlparse(self.link).path)).parts[2]
 
 
 class BazosImage:

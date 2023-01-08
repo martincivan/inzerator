@@ -42,8 +42,8 @@ async def main():
                        limiter, BazosClient(
                 rate_limiter=limiter))
         search_storage = SearchStorage(db.maker)
-        runner = SearchRunner(search_storage=search_storage, loader=loader)
-        await runner.run(datetime.now() - timedelta(seconds=5))
+        runner = SearchRunner(search_storage=search_storage, bazos=loader)
+        await runner.run(datetime.now() - timedelta(seconds=5), datetime.now() - timedelta(hours=12))
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -13,7 +13,7 @@ from inzerator.bazos.storage import AuthorStorage
 from inzerator.rate_limiter import RateLimiter
 
 
-class Loader:
+class RSSLoader:
 
     def __init__(self, baseurl: str, search_params: SearchParams, session: RateLimiter):
         self.session = session
@@ -77,29 +77,23 @@ class AuthorLoader:
     def __init__(self, author_storage: AuthorStorage, session: RateLimiter, author_validator: AuthorValidator):
         self.session = session
         self.author_storage = author_storage
-        self.user_pattern = "\"(https://www.bazos.sk/hodnotenie.php\\?[^\s]*)\""
         self.user_listing_number = "Všetky inzeráty užívateľa \((\d+)\)\:"
         self.author_validator = author_validator
 
-    async def load(self, data: ApiData, feed_item: FeedItem) -> Optional[bool]:
-        async with await self.session.get(feed_item.link) as html:
-            listing_text = await html.text()
-            result = re.search(self.user_pattern, listing_text)
-            if result is None or not len(result.groups()):
-                logging.warning("User pattern not matched.",
-                                {"listing_link": feed_item.link, "listing_text": listing_text})
-                return
-            author_valid = await self.author_storage.get(email_id=data.email_id, phone_id=data.phone_id)
-            if author_valid is None:
-                author_valid = await self._validate_author(result.groups()[0], phone_id=data.phone_id,
-                                                           email_id=data.email_id)
-            return author_valid
+    async def check(self, data: ApiData) -> Optional[bool]:
+        author_valid = await self.author_storage.get(email_id=data.email_id, phone_id=data.phone_id)
+        if author_valid is None:
+            author_valid = await self._validate_author(
+                "https://www.bazos.sk/hodnotenie.php?idmail=%s&idphone=%s" % (data.email_id, data.phone_id),
+                phone_id=data.phone_id,
+                email_id=data.email_id, name=data.name)
+        return author_valid
 
-    async def _validate_author(self, author_url: str, phone_id: str, email_id: str) -> Optional[bool]:
+    async def _validate_author(self, author_url: str, phone_id: str, email_id: str, name: str) -> Optional[bool]:
         async with await self.session.get(author_url) as html:
             listing_text = await html.text()
             parser = AuthorDataParser()
-            data = parser.parse(listing_text, author_url)
+            data = parser.parse(listing_text, author_url, name)
             result = self.author_validator.validate(data)
             if not result:
                 await self.author_storage.add(phone_id=phone_id, email_id=email_id, valid=result)
@@ -136,8 +130,8 @@ def _parse_listings(html: str, url: str) -> list[str]:
 
 class AuthorDataParser:
 
-    def parse(self, html: str, url: str) -> AuthorData:
-        name = _parse_name(html, url)
+    def parse(self, html: str, url: str, name: Optional[str]) -> AuthorData:
+        name = name or _parse_name(html, url)
         listing_count = _parse_listing_count(html, url)
         listing_urls = _parse_listings(html, url)
 

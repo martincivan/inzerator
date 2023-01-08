@@ -3,7 +3,7 @@ from dataclasses_json import dataclass_json, config
 from random import randint, choice
 
 from inzerator.rate_limiter import RateLimiter
-from typing import Optional
+from typing import Optional, Any
 
 URL = 'https://www.bazos.sk/api/v1/ad-detail-2.php?ad_id='
 headers = {
@@ -27,6 +27,7 @@ class ApiData:
     zip_code: str
     url: str
     images: list[str]
+    name: str
     phone_id: Optional[str] = None
     email_id: Optional[str] = None
 
@@ -37,7 +38,10 @@ class BazosClient:
         super().__init__()
         self.session = rate_limiter
 
-    async def get_data(self, ad_id: int) -> ApiData:
+    async def get_data(self, ad_id: int) -> Any | None:
         async with await self.session.get(URL + str(ad_id), headers=headers) as data:
             json = await data.read()
-            return ApiData.from_json(json)
+            try:
+                return ApiData.from_json(json)
+            except KeyError:
+                return None
