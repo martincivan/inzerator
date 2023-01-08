@@ -39,11 +39,11 @@ async def main():
         storage = AuthorStorage(db.maker)
         loader = Bazos(listing_storage,
                        AuthorLoader(author_storage=storage, session=limiter, author_validator=AuthorValidator(3)),
-                       limiter, BazosClient(
-                rate_limiter=limiter))
+                       limiter, BazosClient(rate_limiter=limiter))
         search_storage = SearchStorage(db.maker)
         runner = SearchRunner(search_storage=search_storage, bazos=loader)
         await runner.run(datetime.now() - timedelta(seconds=5), datetime.now() - timedelta(hours=12))
+
 
 if __name__ == "__main__":
     asyncio.run(main())
