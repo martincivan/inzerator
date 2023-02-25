@@ -1,3 +1,4 @@
+import asyncio
 import dataclasses
 import re
 import urllib.parse
@@ -26,14 +27,19 @@ class RSSLoader:
 
     async def __anext__(self) -> AsyncIterable[FeedItem]:
         if not self.data:
-            await self.load()
+            while not await self.load():
+                logging.warning("rate limited, sleeping for 10mins")
+                print("rate limited, sleeping for 10mins")
+                await asyncio.sleep(600)
         for i in self.data:
             yield i
 
-    async def load(self):
+    async def load(self) -> bool:
         search_params = {k: v for k, v in self.search_params.__dict__.items() if v is not None}
         async with await self.session.get(self.baseUrl + urllib.parse.urlencode(search_params)) as html:
             result = await html.text()
+            if html.status != 200:
+                return False
             self.data = []
             rss = feedparser.parse(result)
             for record in rss.entries:
@@ -45,6 +51,7 @@ class RSSLoader:
                 self.data.append(
                     FeedItem(title=title, price=price, link=record.link, summary=record.summary, image_link=image_link,
                              published=record.published_parsed))
+        return True
 
 
 @dataclasses.dataclass
