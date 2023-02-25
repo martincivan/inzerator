@@ -67,7 +67,7 @@ services:
       GF_DATABASE_SSL_MODE: disable
     restart: unless-stopped
     depends_on:
-      pg_grafana:
+      db:
         condition: service_healthy
     ports:
       - 3111:3000
@@ -76,3 +76,4 @@ services:
 volumes:
   local_pgdata:
   pgadmin-data:
+  grafana:

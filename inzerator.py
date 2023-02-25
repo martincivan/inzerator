@@ -44,12 +44,12 @@ async def main():
                        limiter, BazosClient(rate_limiter=limiter))
         search_storage = SearchStorage(db.maker)
         runner = SearchRunner(search_storage=search_storage, bazos=loader)
-        i = 100
+        i = 1800
         while not killer.kill_now:
-            if i == 100:
+            if i == 1800:
                 await runner.run(datetime.now() - timedelta(seconds=5), datetime.now() - timedelta(hours=12))
                 i = 0
-            await asyncio.sleep(3)
+            await asyncio.sleep(1)
             i += 1
         print("DONE")
 
