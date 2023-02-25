@@ -35,7 +35,7 @@ class SearchStorage:
 
     async def get_run_before(self, run_before: datetime):
         async with self.maker() as session:
-            result = session.execute(select(Search).where(Search.last_run_at < run_before).order_by(Search.user_id))
+            result = session.execute(select(Search).where(Search.last_run_at < run_before).order_by(Search.last_run_at))
             await session.commit()
             result = await result
             return result.scalars().all()
