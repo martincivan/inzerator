@@ -7,6 +7,7 @@ from inzerator.bazos.bazos_api import BazosClient
 from inzerator.bazos.rss import AuthorLoader, AuthorValidator
 from inzerator.bazos.storage import ListingStorage, AuthorStorage
 from inzerator.db.db import DB
+from inzerator.killer import GracefulKiller
 from inzerator.rate_limiter import RateLimiter
 from inzerator.users.searches import SearchStorage
 from inzerator.search_scheduler import SearchRunner
@@ -32,6 +33,7 @@ def next_send():
 
 async def main():
     db = DB()
+    killer = GracefulKiller()
     async with aiohttp.ClientSession(
             timeout=aiohttp.ClientTimeout(total=20, connect=10, sock_read=10, sock_connect=10)) as session:
         limiter = RateLimiter(session)
@@ -42,7 +44,14 @@ async def main():
                        limiter, BazosClient(rate_limiter=limiter))
         search_storage = SearchStorage(db.maker)
         runner = SearchRunner(search_storage=search_storage, bazos=loader)
-        await runner.run(datetime.now() - timedelta(seconds=5), datetime.now() - timedelta(hours=12))
+        i = 100
+        while not killer.kill_now:
+            if i == 100:
+                await runner.run(datetime.now() - timedelta(seconds=5), datetime.now() - timedelta(hours=12))
+                i = 0
+            await asyncio.sleep(3)
+            i += 1
+        print("DONE")
 
 
 if __name__ == "__main__":

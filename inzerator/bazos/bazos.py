@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime, timedelta
 
 from aiohttp import ClientSession
@@ -33,12 +34,12 @@ class Bazos:
         self.session = session
         self.listing_storage = listing_storage
         self.user_checker = user_checker
-        self.client = ClientSession()
         self.fresh = FreshValidator()
 
     async def load_images(self, links: list[str]) -> AsyncIterable[BazosImage]:
-        for link in links:
-            yield BazosImage(link, await self.client.get(link))
+        async with ClientSession() as client:
+            for link in links:
+                yield BazosImage(link, await client.get(link))
 
     async def process_feed(self, search_params: SearchParams, user_id: int) -> AsyncIterable[FeedItem]:
         loader = RSSLoader(self.BASE_URL, search_params=search_params, session=self.session)
@@ -54,9 +55,13 @@ class Bazos:
                 yield feed_item
 
     async def process_open(self, last_open_before: datetime):
-        async for listing in self.listing_storage.get_open_before(last_open_before):
-            data = await self.api.get_data(listing.id)
-            listing.last_processed_at = datetime.now()
-            if not data:
-                listing.removed_at = datetime.now()
-            await self.listing_storage.save_removed_processed(listing)
+        res = [self.process_open_listing(listing=listing) async for listing in
+               self.listing_storage.get_open_before(last_open_before=last_open_before)]
+        await asyncio.gather(*res)
+
+    async def process_open_listing(self, listing):
+        data = await self.api.get_data(listing.id)
+        listing.last_processed_at = datetime.now()
+        if not data:
+            listing.removed_at = datetime.now()
+        await self.listing_storage.save_removed_processed(listing)

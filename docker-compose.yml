@@ -1,5 +1,32 @@
 version: "3.8"
 services:
+  builder:
+    profiles:
+      - cli
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    command: bash
+    volumes:
+      - ./:/app-root
+    environment:
+      DATABASE_URL: "postgres://user:admin@db:5432/inzerator"
+    depends_on:
+      db:
+        condition: service_healthy
+  runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    volumes:
+      - ./:/app-root
+    environment:
+      DATABASE_URL: "postgres://user:admin@db:5432/inzerator"
+    depends_on:
+      db:
+        condition: service_healthy
   db:
     image: postgres
     ports:
@@ -9,6 +36,12 @@ services:
       POSTGRES_PASSWORD: admin
     volumes:
       - local_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "-d", "db_prod" ]
+      interval: 3s
+      timeout: 60s
+      retries: 30
+      start_period: 5s
   pgadmin:
     image: dpage/pgadmin4
     ports:
@@ -18,6 +51,9 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
     volumes:
       - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      db:
+        condition: service_healthy
 volumes:
   local_pgdata:
   pgadmin-data:
