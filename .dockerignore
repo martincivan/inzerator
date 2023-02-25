@@ -2,3 +2,7 @@
 .idea
 .pytest_cache
 venv
+Dockerfile
+docker-compose.yml
+.dockerignore
+README.md

@@ -6,4 +6,4 @@ COPY ./* .
 RUN pip install -r requirements.txt
 
 FROM builder as runner
-CMD python inzerator.py
+CMD python -u inzerator.py
