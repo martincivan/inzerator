@@ -50,6 +50,8 @@ class Bazos:
                 yield feed_item
                 continue
             data = await self.api.get_data(feed_item.ad_id)
+            if data.status == "deleted":
+                continue
             images = self.load_images(data.images)
             if await self.listing_storage.add(data, images, user_id) and await self.user_checker.check(data):
                 yield feed_item
